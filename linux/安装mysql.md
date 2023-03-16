@@ -152,3 +152,82 @@ mysql.sock.lock
 ```
 
 ## windows下安装mysql
+
+> 下载MySQL 8.0压缩包
+
+https://downloads.mysql.com/archives/community/
+
+> 解压安装
+
+解压到了D:\work\mysql-8.0.20
+
+> 添加环境变量
+
+```bash
+MYSQL_HOME
+D:\work\mysql-8.0.20
+
+Path
+%MYSQL_HOME%\bin
+```
+
+> 在D:\work\mysql-8.0.20下新建my.ini文件
+
+```bash
+[Client]
+#设置端口
+port = 3306
+[mysqld]
+#设置端口
+port = 3306
+# 设置mysql的安装目录
+basedir=D:\work\mysql-8.0.20\
+# 设置mysql数据库的数据的存放目录
+datadir=D:\work\mysql-8.0.20\data\
+# 允许最大连接数
+max_connections=1200
+# 服务端使用的字符集默认为8比特编码的latin1字符集
+character-set-server=utf8
+# 创建新表时将使用的默认存储引擎
+default-storage-engine=INNODB
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+
+max_allowed_packet = 500M
+[mysql]
+# 设置mysql客户端默认字符集
+default-character-set=utf8
+```
+
+> 管理员执行cmd
+
+```powershell
+mysqld -install mysql8.0
+```
+
+```powershell
+mysqld --initialize --user=mysql
+#此时D:\work\mysql-8.0.20\data目录下生产了许多配置文件
+#如果此时并没有生成data文件夹，则输入下面这个命令
+mysqld --no-defaults --initialize --user=mysql
+```
+
+> 启动服务
+
+```powershell
+net start mysql8.0
+```
+
+> 复制密码
+
+打开MySQL下的data目录，找到以err为后缀名的文件，使用记事本或Notepad++打开，CTRL+F搜索password
+
+```sql
+mysql -u root -p
+```
+
+在命令行mysql>后输入以下命令修改root密码。
+
+```mysql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
+flush privileges;
+```

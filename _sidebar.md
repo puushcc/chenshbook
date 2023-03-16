@@ -1,6 +1,6 @@
 <!-- docs/_sidebar.md -->
 
-#### 		 安装篇
+#### 		 常见环境部署
 
 - [安装JDK](linux/java)
 
@@ -20,22 +20,30 @@
 
 - [安装mysql](linux/安装mysql)
 
-- 安装zookeeper
+- [安装zookeeper](linux/安装zookeeper)
 
-- 安装kafka
+- [安装kafka](linux/安装kafka)
 
-#### **配置篇**
+#### **Jenkins**
 
 - [Jenkins配置](配置篇章/Jenkins配置)
 
-#### **实践篇**
+#### **linux系统操作实例**
 
 - [lsyncd和rsync实现文件实时同步](实践篇/lsyncd和rsync实现文件实时同步)
 
 - [基于KVM的虚拟化](实践篇/基于KVM的虚拟化)
 
-#### 服务器管理篇
+#### 服务器管理
 
 - [块存储](linux/磁盘存储)
 
 - 网络
+
+#### mysql数据库
+
+- [mysql修改密码](实践篇/mysql数据库/mysql修改密码)
+- [mysql的3种安装方式和4种启动方式](实践篇/mysql数据库/mysql的3种安装方式和4种启动方式)
+- [mysql连接数据库语句](实践篇/mysql数据库/mysql连接数据库语句)
+- [mysql设置远程访问权限](实践篇/mysql数据库/mysql设置远程访问权限)
+
