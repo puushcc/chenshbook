@@ -51,4 +51,4 @@
 
 #### Kubernetes
 
-- [二进制安装Kubernetes V1.26.0](Kubernetes/二进制安装Kubernetes V1.26.0)
+- [二进制安装Kubernetes V1.26.0](Kubernetes/二进制安装KubernetesV1.26.0)
