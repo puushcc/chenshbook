@@ -28,7 +28,9 @@
 
 - [Jenkins配置](配置篇章/Jenkins配置)
 
-#### **linux系统操作实例**
+#### **linux**
+
+- 服务器初始化
 
 - [lsyncd和rsync实现文件实时同步](实践篇/lsyncd和rsync实现文件实时同步)
 
@@ -47,3 +49,6 @@
 - [mysql连接数据库语句](实践篇/mysql数据库/mysql连接数据库语句)
 - [mysql设置远程访问权限](实践篇/mysql数据库/mysql设置远程访问权限)
 
+#### Kubernetes
+
+- [二进制安装Kubernetes V1.26.0](Kubernetes/二进制安装Kubernetes V1.26.0)

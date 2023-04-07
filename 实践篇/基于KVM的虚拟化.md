@@ -120,3 +120,172 @@ virt-manager
 ```
 
 后续操作与VMware workstation创建虚拟机类似，不做说明
+
+## 5、WEB管理工具kimchi
+
+>  下载wok安装包和kimchi安装包
+
+　　wok下载地址：https://github.com/kimchi-project/kimchi/releases/download/2.5.0/wok-2.5.0-0.el7.centos.noarch.rpm
+
+　　kimchi下载地址：https://github.com/kimchi-project/kimchi/releases/download/2.5.0/kimchi-2.5.0-0.el7.centos.noarch.rpm
+
+> 更新软件包并安装epel扩展源
+
+```bash
+yum update
+yum install epel*
+```
+
+> 安装wok和kimchi
+
+```bash
+yum install ./wok-2.5.0-0.el7.centos.noarch.rpm ./kimchi-2.5.0-0.el7.centos.noarch.rpm
+```
+
+> 启动nginx和wokd服务
+
+```bash
+systemctl daemon-reload
+systemctl start wokd
+nginx
+```
+
+> 访问kimchi界面
+
+用https协议去访问宿主机的8001端口
+
+账号密码与系统账号一致
+
+## 6、命令行
+
+- ### virt-manager
+
+> 打开虚拟机图形化管理页面
+
+- ### virsh
+
+​		命令行工具virsh，创建虚拟机，查看虚拟机，动态热插拔硬盘，给虚拟机做快照，迁移、启动、停止、挂起、暂停、删除虚拟机等等操作
+
+​		virsh命令大概分了，Domain Management（域管理），Domain Monitoring（域监控）、 Host and Hypervisor（主机及虚拟化）、Interface（网卡接口）、Network Filter（网络防火墙）、Networking（网络）、Node Device（节点设备驱动）、Secret、Snapshot（快照）、Storage Pool（存储池或存储策略）、Storage Volume（存储卷）、Virsh itself（virsh shell自身相关）这些组，如果查看某一组帮助信息，我们可以使用virsh help +组名
+
+> virsh list
+
+​	列出当前宿主机上的虚拟机列表，默认不加任何选项表示列出当前处于运行状态的虚拟机列表（活跃的）
+
+```bash
+virsh list
+ Id    名称                         状态
+----------------------------------------------------
+
+virsh list --all
+ Id    名称                         状态
+----------------------------------------------------
+ -     centos7.0                      关闭
+```
+
+> **创建pool**
+
+```bash
+#【例】创建名为extra_images的pool，volume存放于/opt/data/kvm/
+virsh pool-define-as extra_images dir - - - - "/opt/data/kvm/"
+virsh pool-build extra_images
+virsh pool-start extra_images
+virsh pool-info extrat_images
+#如果 Autostart: no，执行 virsh pool-autostart <pool> 可以让它自启动
+```
+
+> **创建volume**
+
+```bash
+virsh vol-create-as <pool> <image name>.qcow2 <image size> --format qcow2
+#说明：volume会保存在default pool，即 /var/lib/libvirt/images，如果该路径挂载的磁盘空间不能满足要求，需要在其它挂载点的路径保存volume，得创建其它pool
+```
+
+> **删除虚拟机**
+
+```bash
+virsh destroy <VM Name>   强制停止虚拟机
+
+virsh undefine <VM Name>  删除虚拟机
+
+updatedb
+
+locate <VM Name>
+```
+
+> 查看、编辑及备份KVM 虚拟机配置文件
+
+```bash
+#KVM 虚拟机默认的配置文件在 /etc/libvirt/qemu 目录下，默认是以虚拟机名称命名的.xml 文件
+ls /etc/libvirt/qemu/
+#KVM 虚拟机配置文件的修改。可以使用vi 或 vim 命令进行编辑修改，但不建议。正确的做法为 virsh edit KVM-NAME
+virsh edit snale 
+#备份KVM 虚拟机配置文件
+mkdir /data/kvmback
+virsh dumpxml snale >/data/kvmback/snale_back.xml
+```
+
+> KVM 虚拟机开启（启动）
+
+```bash
+virsh start snale2
+```
+
+> KVM 虚拟机关机
+
+```bash
+virsh shutdown snale2
+#注：KVM 虚拟机默认是无法用virsh shutdown 进行关机的，如果要想使用该命令关机，则必须在kvm 虚拟机上安装acpid acpid-sysvinit 两个包，启动acpid 服务，并且加入随机启动，如下：
+yum install -y acpid acpid-sysvinit
+service acpid start
+```
+
+> 强制关机（强制断电）
+
+```bash
+virsh destroy snale
+域 snale 被删除
+```
+
+> 暂停（挂起）KVM 虚拟机
+
+```bash
+virsh suspend snale
+```
+
+> 恢复被挂起的 KVM 虚拟机
+
+```bash
+virsh resume snale
+```
+
+> 删除KVM 虚拟机
+
+```bash
+virsh undefine snale
+```
+
+该方法只删除配置文件，磁盘文件未删除，相当于从虚拟机中移除。
+
+> KVM 设置为随物理机启动而启动（开机启动）
+
+```bash
+virsh autostart snale
+```
+
+- qemu-img
+
+> 创建磁盘
+
+```bash
+qemu-img create -f qcow2 ./centos7.qcow2 10G
+```
+
+- virt-install
+
+> 创建虚拟机
+
+```bash
+virt-install --virt-type kvm --name c7 --ram 1024 --vcpus 2 --cdrom=/kvm/iso/CentOS-7-x86_64-Minimal-1708.iso --disk path=/kvm/images/centos7.qcow2 --network=default --graphics vnc,listen=0.0.0.0 --noautoconsole	
+
+```
